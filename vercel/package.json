@@ -1,0 +1,17 @@
+{
+  "name": "c2c-vercel",
+  "version": "1.0.0",
+  "description": "Adaptación del Sistema C2C para despliegue en Vercel (Serverless Functions)",
+  "dependencies": {
+    "express": "^4.19.2",
+    "serverless-http": "^3.2.0",
+    "mongoose": "^8.4.0",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "cloudinary": "^2.2.0",
+    "stripe": "^15.7.0",
+    "express-validator": "^7.1.0"
+  }
+}

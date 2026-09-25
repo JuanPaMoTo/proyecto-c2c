@@ -1,0 +1,37 @@
+<!-- HU-04: Proceso de Compra de Producto -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Sistema C2C</title>
+  <link rel="stylesheet" href="checkout.css" />
+</head>
+<body>
+  <main class="contenedor">
+    <section class="detalle-producto tarjeta" id="detalleProducto">
+      <p>Cargando producto...</p>
+    </section>
+
+    <form id="formCheckout" class="checkout tarjeta">
+      <h2>Datos de entrega y pago</h2>
+
+      <label for="direccion">Dirección de entrega</label>
+      <textarea id="direccion" rows="3" required></textarea>
+
+      <label for="metodoPago">Método de pago</label>
+      <select id="metodoPago" required>
+        <option value="tarjeta">Tarjeta de crédito/débito</option>
+        <option value="mercadopago">MercadoPago</option>
+      </select>
+
+      <label for="numeroTarjeta">Número de tarjeta (simulado)</label>
+      <input type="text" id="numeroTarjeta" placeholder="4242 4242 4242 4242" required />
+
+      <button type="button" id="btnComprar" class="btn-comprar">Comprar Ahora</button>
+      <p class="mensaje" id="mensajeServidor" role="alert"></p>
+    </form>
+  </main>
+  <script src="checkout.js"></script>
+</body>
+</html>

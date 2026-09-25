@@ -1,0 +1,50 @@
+%% NIVEL 3 - DIAGRAMA DE COMPONENTES (C4 Model)
+%% Componentes internos de la API REST (Backend)
+C4Component
+    title Diagrama de Componentes - API REST (Backend)
+
+    Container(spa, "Aplicación Web", "HTML/CSS/JS", "Frontend del sistema")
+
+    Container_Boundary(api, "API REST - Node.js/Express") {
+        Component(authController, "Auth Controller", "Express Router", "HU-01: Registro / Login de usuarios")
+        Component(productController, "Product Controller", "Express Router", "HU-02 / HU-03: Publicación y búsqueda de productos")
+        Component(orderController, "Order Controller", "Express Router", "HU-04: Proceso de compra")
+        Component(authMiddleware, "Auth Middleware", "JWT Middleware", "Valida el token en rutas protegidas")
+        Component(authService, "Auth Service", "Módulo de Negocio", "Hash de contraseñas (bcrypt), generación JWT")
+        Component(productService, "Product Service", "Módulo de Negocio", "Reglas de negocio de productos y filtros")
+        Component(orderService, "Order Service", "Módulo de Negocio", "Valida stock, evita auto-compra, cambia estado")
+        Component(uploadService, "Upload Service", "Módulo de Integración", "Sube imágenes a Cloud Storage")
+        Component(paymentService, "Payment Service", "Módulo de Integración", "Integra con Stripe/MercadoPago")
+        Component(userRepo, "User Repository", "Data Access Layer", "CRUD de usuarios")
+        Component(productRepo, "Product Repository", "Data Access Layer", "CRUD de productos")
+        Component(orderRepo, "Order Repository", "Data Access Layer", "CRUD de órdenes")
+    }
+
+    ContainerDb(db, "Base de Datos", "MongoDB/PostgreSQL")
+    System_Ext(storage, "Cloud Storage", "AWS S3/Cloudinary")
+    System_Ext(gateway, "Pasarela de Pago", "Stripe/MercadoPago")
+
+    Rel(spa, authController, "POST /api/auth/register", "JSON/HTTPS")
+    Rel(spa, productController, "POST/GET /api/products", "JSON/HTTPS")
+    Rel(spa, orderController, "POST /api/orders", "JSON/HTTPS")
+
+    Rel(productController, authMiddleware, "Verifica token")
+    Rel(orderController, authMiddleware, "Verifica token")
+
+    Rel(authController, authService, "Usa")
+    Rel(productController, productService, "Usa")
+    Rel(orderController, orderService, "Usa")
+
+    Rel(productService, uploadService, "Usa")
+    Rel(orderService, paymentService, "Usa")
+
+    Rel(authService, userRepo, "Usa")
+    Rel(productService, productRepo, "Usa")
+    Rel(orderService, orderRepo, "Usa")
+    Rel(orderService, productRepo, "Actualiza estado 'Vendido'")
+
+    Rel(userRepo, db, "Query/Persist")
+    Rel(productRepo, db, "Query/Persist")
+    Rel(orderRepo, db, "Query/Persist")
+    Rel(uploadService, storage, "PUT objeto")
+    Rel(paymentService, gateway, "Crea cargo")

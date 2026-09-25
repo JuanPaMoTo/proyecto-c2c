@@ -1,0 +1,53 @@
+%% NIVEL 4 - DIAGRAMA DE CODIGO (C4 Model)
+%% Diagrama de clases del componente "Order Service" (HU-04: Proceso de Compra)
+classDiagram
+    class OrderController {
+        +createOrder(req, res)
+    }
+    class OrderService {
+        -orderRepo: OrderRepository
+        -productRepo: ProductRepository
+        -paymentService: PaymentService
+        +placeOrder(buyerId, productId, paymentData) Order
+        -validateNotSameSeller(buyerId, sellerId) boolean
+        -validateAvailability(product) boolean
+    }
+    class PaymentService {
+        +charge(amount, paymentData) PaymentResult
+    }
+    class OrderRepository {
+        +create(order) Order
+        +findById(id) Order
+    }
+    class ProductRepository {
+        +findById(id) Product
+        +updateStatus(id, status) Product
+    }
+    class Order {
+        +id: string
+        +buyerId: string
+        +productId: string
+        +status: string
+        +amount: number
+        +createdAt: Date
+    }
+    class Product {
+        +id: string
+        +sellerId: string
+        +title: string
+        +price: number
+        +status: string
+    }
+    class PaymentResult {
+        +success: boolean
+        +transactionId: string
+    }
+
+    OrderController --> OrderService : usa
+    OrderService --> OrderRepository : usa
+    OrderService --> ProductRepository : usa
+    OrderService --> PaymentService : usa
+    OrderService ..> Order : crea
+    OrderRepository --> Order : persiste
+    ProductRepository --> Product : persiste
+    PaymentService --> PaymentResult : retorna

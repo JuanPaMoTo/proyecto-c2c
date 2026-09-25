@@ -1,0 +1,21 @@
+%% NIVEL 1 - DIAGRAMA DE CONTEXTO (C4 Model)
+%% Sistema C2C de compra/venta entre clientes
+C4Context
+    title Diagrama de Contexto - Sistema C2C
+
+    Person(comprador, "Cliente Comprador", "Usuario registrado que busca y compra productos")
+    Person(vendedor, "Cliente Vendedor", "Usuario registrado que publica y vende productos")
+    Person(visitante, "Visitante", "Usuario no registrado que desea crear una cuenta")
+
+    System(sistemaC2C, "Sistema C2C", "Permite a los clientes registrarse, publicar productos, buscarlos y comprarlos entre sí")
+
+    System_Ext(pasarelaPago, "Pasarela de Pago", "Stripe / MercadoPago - Procesa transacciones")
+    System_Ext(almacenImagenes, "Almacenamiento en la Nube", "AWS S3 / Cloudinary - Guarda imágenes de productos")
+    System_Ext(emailService, "Servicio de Correo", "Envío de notificaciones (registro, compra, venta)")
+
+    Rel(visitante, sistemaC2C, "Se registra", "HTTPS")
+    Rel(vendedor, sistemaC2C, "Publica productos", "HTTPS")
+    Rel(comprador, sistemaC2C, "Busca y compra productos", "HTTPS")
+    Rel(sistemaC2C, pasarelaPago, "Procesa pagos", "HTTPS/REST API")
+    Rel(sistemaC2C, almacenImagenes, "Sube/obtiene imágenes", "HTTPS/REST API")
+    Rel(sistemaC2C, emailService, "Envía notificaciones", "SMTP/API")

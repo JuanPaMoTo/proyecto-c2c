@@ -1,0 +1,26 @@
+%% NIVEL 2 - DIAGRAMA DE CONTENEDORES (C4 Model)
+%% Arquitectura multicapa con proxy inverso
+C4Container
+    title Diagrama de Contenedores - Sistema C2C (Arquitectura Multicapa con Proxy Inverso)
+
+    Person(usuario, "Cliente (Comprador/Vendedor)", "Usuario registrado del marketplace")
+
+    System_Boundary(sistemaC2C, "Sistema C2C") {
+        Container(proxy, "Proxy Inverso", "Nginx", "Enruta peticiones, balanceo de carga, SSL termination, cache estático, rate limiting")
+        Container(spa, "Aplicación Web (Frontend)", "HTML5, CSS3, JavaScript (Vanilla)", "Interfaz de usuario: registro, publicación, búsqueda y compra")
+        Container(api, "API REST (Backend)", "Node.js + Express", "Lógica de negocio: autenticación, productos, órdenes")
+        ContainerDb(db, "Base de Datos", "MongoDB / PostgreSQL", "Almacena usuarios, productos y órdenes")
+        Container(cache, "Cache", "Redis", "Cachea sesiones y resultados de búsqueda frecuentes")
+    }
+
+    System_Ext(pasarelaPago, "Pasarela de Pago", "Stripe / MercadoPago")
+    System_Ext(almacenImagenes, "Cloud Storage", "AWS S3 / Cloudinary")
+
+    Rel(usuario, proxy, "HTTPS Request", "puerto 443")
+    Rel(proxy, spa, "Sirve archivos estáticos", "HTTP interno")
+    Rel(proxy, api, "Reenvía /api/*", "HTTP interno, puerto 3000")
+    Rel(spa, api, "Consume vía fetch/AJAX", "JSON/HTTPS")
+    Rel(api, db, "Lee/Escribe", "TCP/ORM-ODM")
+    Rel(api, cache, "Lee/Escribe sesión y cache", "TCP/Redis Protocol")
+    Rel(api, pasarelaPago, "Procesa pago", "HTTPS/REST")
+    Rel(api, almacenImagenes, "Sube imágenes", "HTTPS/REST")

@@ -1,0 +1,39 @@
+/* HU-03: Estilos de búsqueda y filtrado - diseño responsive */
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; margin: 0; }
+
+.barra-busqueda {
+  display: flex; gap: 8px; padding: 16px; background: #1a1a2e; position: sticky; top: 0; z-index: 10;
+}
+.barra-busqueda input { flex: 1; padding: 10px 14px; border-radius: 8px; border: none; font-size: 1rem; }
+.barra-busqueda button { padding: 10px 20px; border: none; border-radius: 8px; background: #4f46e5; color: #fff; font-weight: 600; cursor: pointer; }
+
+.layout { display: flex; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+.filtros { width: 220px; background: #fff; padding: 20px; border-radius: 12px; height: fit-content; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.filtros h2 { margin-top: 0; font-size: 1.1rem; }
+.filtros label { display: block; margin-top: 12px; font-size: 0.85rem; font-weight: 600; }
+.filtros input, .filtros select { width: 100%; padding: 8px; margin-top: 6px; border-radius: 6px; border: 1px solid #ccc; }
+.filtros button { width: 100%; margin-top: 16px; padding: 10px; border: none; border-radius: 8px; background: #4f46e5; color: #fff; font-weight: 600; cursor: pointer; }
+
+.resultados {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  align-content: start;
+}
+.tarjeta-producto {
+  background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.tarjeta-producto:hover { transform: translateY(-3px); }
+.tarjeta-producto img { width: 100%; height: 140px; object-fit: cover; background: #eee; }
+.tarjeta-producto .info { padding: 12px; }
+.tarjeta-producto .titulo { font-weight: 600; font-size: 0.95rem; margin: 0 0 4px; }
+.tarjeta-producto .precio { color: #4f46e5; font-weight: 700; }
+
+/* Responsive: en pantallas pequeñas los filtros pasan arriba de los resultados */
+@media (max-width: 700px) {
+  .layout { flex-direction: column; }
+  .filtros { width: 100%; }
+}

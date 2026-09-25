@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Arquitectura C4 - Sistema C2C</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --card:#ffffff; --text:#1a1a2e; --muted:#5b5b6e; --accent:#4f46e5; --border:#e2e4ea;
+    padding-top: env(safe-area-inset-top,0px); padding-bottom: env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --bg:#14141f; --card:#1e1e2e; --text:#f0f0f5; --muted:#a3a3b8; --border:#33334a; }
+  }
+  :root[data-theme="dark"]{ --bg:#14141f; --card:#1e1e2e; --text:#f0f0f5; --muted:#a3a3b8; --border:#33334a; }
+  * { box-sizing:border-box; }
+  html{ scroll-padding-top: env(safe-area-inset-top,0px); }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:'Segoe UI',Arial,sans-serif; }
+  header{ padding:24px 20px 8px; text-align:center; }
+  header h1{ margin:0 0 4px; font-size:1.4rem; }
+  header p{ margin:0; color:var(--muted); font-size:0.9rem; }
+  .tabs{ display:flex; gap:8px; overflow-x:auto; padding:16px 20px; max-width:960px; margin:0 auto; }
+  .tab{ flex:0 0 auto; padding:9px 16px; border-radius:20px; border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; font-size:0.85rem; }
+  .tab.activo{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  main{ max-width:960px; margin:0 auto; padding:0 20px 40px; }
+  .panel{ display:none; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; overflow-x:auto; }
+  .panel.activo{ display:block; }
+  .panel h2{ margin-top:0; font-size:1.1rem; }
+  .panel p{ color:var(--muted); font-size:0.85rem; }
+  pre.mermaid{ background:transparent; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Arquitectura C4 &mdash; Sistema C2C</h1>
+  <p>Arquitectura multicapa con proxy inverso &middot; Taller 1</p>
+</header>
+
+<div class="tabs">
+  <button class="tab activo" data-panel="p1">1. Contexto</button>
+  <button class="tab" data-panel="p2">2. Contenedores</button>
+  <button class="tab" data-panel="p3">3. Componentes</button>
+  <button class="tab" data-panel="p4">4. Código</button>
+</div>
+
+<main>
+  <section class="panel activo" id="p1">
+    <h2>Nivel 1 &mdash; Diagrama de Contexto</h2>
+    <p>Actores del sistema C2C y sistemas externos con los que interactúa.</p>
+    <pre class="mermaid">
+C4Context
+    title Diagrama de Contexto - Sistema C2C
+    Person(comprador, "Cliente Comprador", "Busca y compra productos")
+    Person(vendedor, "Cliente Vendedor", "Publica y vende productos")
+    Person(visitante, "Visitante", "Usuario no registrado")
+    System(sistemaC2C, "Sistema C2C", "Permite registrarse, publicar, buscar y comprar productos")
+    System_Ext(pasarelaPago, "Pasarela de Pago", "Stripe / MercadoPago")
+    System_Ext(almacenImagenes, "Cloud Storage", "AWS S3 / Cloudinary")
+    System_Ext(emailService, "Servicio de Correo", "Notificaciones")
+    Rel(visitante, sistemaC2C, "Se registra")
+    Rel(vendedor, sistemaC2C, "Publica productos")
+    Rel(comprador, sistemaC2C, "Busca y compra")
+    Rel(sistemaC2C, pasarelaPago, "Procesa pagos")
+    Rel(sistemaC2C, almacenImagenes, "Sube/obtiene imágenes")
+    Rel(sistemaC2C, emailService, "Envía notificaciones")
+    </pre>
+  </section>
+
+  <section class="panel" id="p2">
+    <h2>Nivel 2 &mdash; Diagrama de Contenedores</h2>
+    <p>Arquitectura multicapa: proxy inverso, frontend, API REST, base de datos y cache.</p>
+    <pre class="mermaid">
+C4Container
+    title Contenedores - Sistema C2C
+    Person(usuario, "Cliente", "Comprador/Vendedor")
+    System_Boundary(sistemaC2C, "Sistema C2C") {
+        Container(proxy, "Proxy Inverso", "Nginx", "Enruta, SSL, rate limiting")
+        Container(spa, "Frontend", "HTML/CSS/JS", "UI del marketplace")
+        Container(api, "API REST", "Node.js + Express", "Lógica de negocio")
+        ContainerDb(db, "Base de Datos", "MongoDB", "Usuarios, productos, órdenes")
+        Container(cache, "Cache", "Redis", "Sesiones y búsquedas frecuentes")
+    }
+    System_Ext(pasarelaPago, "Pasarela de Pago")
+    System_Ext(almacenImagenes, "Cloud Storage")
+    Rel(usuario, proxy, "HTTPS")
+    Rel(proxy, spa, "Sirve estáticos")
+    Rel(proxy, api, "Reenvía /api/*")
+    Rel(spa, api, "fetch/AJAX JSON")
+    Rel(api, db, "Lee/Escribe")
+    Rel(api, cache, "Lee/Escribe")
+    Rel(api, pasarelaPago, "Procesa pago")
+    Rel(api, almacenImagenes, "Sube imágenes")
+    </pre>
+  </section>
+
+  <section class="panel" id="p3">
+    <h2>Nivel 3 &mdash; Diagrama de Componentes</h2>
+    <p>Componentes internos de la API REST (Backend).</p>
+    <pre class="mermaid">
+C4Component
+    title Componentes - API REST
+    Container(spa, "Frontend", "HTML/CSS/JS")
+    Container_Boundary(api, "API REST") {
+        Component(authController, "Auth Controller", "Router", "HU-01")
+        Component(productController, "Product Controller", "Router", "HU-02/03")
+        Component(orderController, "Order Controller", "Router", "HU-04")
+        Component(authMiddleware, "Auth Middleware", "JWT")
+        Component(authService, "Auth Service", "Negocio")
+        Component(productService, "Product Service", "Negocio")
+        Component(orderService, "Order Service", "Negocio")
+        Component(uploadService, "Upload Service", "Integración")
+        Component(paymentService, "Payment Service", "Integración")
+        Component(userRepo, "User Repository", "Datos")
+        Component(productRepo, "Product Repository", "Datos")
+        Component(orderRepo, "Order Repository", "Datos")
+    }
+    ContainerDb(db, "Base de Datos")
+    System_Ext(storage, "Cloud Storage")
+    System_Ext(gateway, "Pasarela de Pago")
+    Rel(spa, authController, "POST /api/auth/register")
+    Rel(spa, productController, "POST/GET /api/products")
+    Rel(spa, orderController, "POST /api/orders")
+    Rel(productController, authMiddleware, "Verifica token")
+    Rel(orderController, authMiddleware, "Verifica token")
+    Rel(authController, authService, "Usa")
+    Rel(productController, productService, "Usa")
+    Rel(orderController, orderService, "Usa")
+    Rel(productService, uploadService, "Usa")
+    Rel(orderService, paymentService, "Usa")
+    Rel(authService, userRepo, "Usa")
+    Rel(productService, productRepo, "Usa")
+    Rel(orderService, orderRepo, "Usa")
+    Rel(userRepo, db, "Query")
+    Rel(productRepo, db, "Query")
+    Rel(orderRepo, db, "Query")
+    Rel(uploadService, storage, "PUT objeto")
+    Rel(paymentService, gateway, "Crea cargo")
+    </pre>
+  </section>
+
+  <section class="panel" id="p4">
+    <h2>Nivel 4 &mdash; Diagrama de Código</h2>
+    <p>Clases del componente Order Service (HU-04: Proceso de Compra).</p>
+    <pre class="mermaid">
+classDiagram
+    class OrderController { +createOrder(req, res) }
+    class OrderService {
+        -orderRepo
+        -productRepo
+        -paymentService
+        +placeOrder(buyerId, productId, paymentData) Order
+        -validateNotSameSeller(buyerId, sellerId) boolean
+        -validateAvailability(product) boolean
+    }
+    class PaymentService { +charge(amount, paymentData) PaymentResult }
+    class OrderRepository { +create(order) Order  +findById(id) Order }
+    class ProductRepository { +findById(id) Product  +updateStatus(id, status) Product }
+    class Order { +id +buyerId +productId +status +amount +createdAt }
+    class Product { +id +sellerId +title +price +status }
+    class PaymentResult { +success +transactionId }
+    OrderController --> OrderService : usa
+    OrderService --> OrderRepository : usa
+    OrderService --> ProductRepository : usa
+    OrderService --> PaymentService : usa
+    OrderService ..> Order : crea
+    OrderRepository --> Order : persiste
+    ProductRepository --> Product : persiste
+    PaymentService --> PaymentResult : retorna
+    </pre>
+  </section>
+</main>
+
+<script>
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('activo'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('activo'));
+      btn.classList.add('activo');
+      document.getElementById(btn.dataset.panel).classList.add('activo');
+    });
+  });
+</script>
+</body>
+</html>

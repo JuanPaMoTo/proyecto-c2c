@@ -1,0 +1,47 @@
+# docker-compose.yml
+# Orquesta la arquitectura multicapa completa: proxy inverso + frontend + backend + BD + cache
+version: '3.9'
+
+services:
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    networks:
+      - c2c-net
+
+  backend:
+    build: ./backend
+    env_file: ./backend/.env.example
+    expose:
+      - "3000"
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - c2c-net
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - c2c-net
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - c2c-net
+
+networks:
+  c2c-net:
+    driver: bridge
+
+volumes:
+  mongo-data:

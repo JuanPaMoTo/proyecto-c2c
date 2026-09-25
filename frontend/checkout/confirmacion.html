@@ -1,0 +1,36 @@
+<!-- HU-04: Pantalla de confirmación/recibo tras la compra -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compra confirmada | Sistema C2C</title>
+  <link rel="stylesheet" href="checkout.css" />
+</head>
+<body>
+  <main class="contenedor">
+    <section class="tarjeta" id="recibo" style="text-align:center">
+      <h1>✅ ¡Compra realizada!</h1>
+      <div id="detalleOrden">Cargando recibo...</div>
+      <a href="../search/search.html">Seguir comprando</a>
+    </section>
+  </main>
+  <script>
+    const API_BASE = window.API_BASE_URL || '/api';
+    const ordenId = new URLSearchParams(window.location.search).get('orden');
+    const token = localStorage.getItem('token');
+
+    fetch(`${API_BASE}/orders/${ordenId}`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((datos) => {
+        const orden = datos.orden;
+        document.getElementById('detalleOrden').innerHTML = orden
+          ? `<p>Orden: ${orden._id}</p><p>Producto: ${orden.productoId?.titulo || ''}</p><p>Monto: $${orden.monto}</p><p>Estado: ${orden.estado}</p>`
+          : '<p>No se encontró el recibo.</p>';
+      })
+      .catch(() => {
+        document.getElementById('detalleOrden').innerHTML = '<p>No se pudo cargar el recibo.</p>';
+      });
+  </script>
+</body>
+</html>
