@@ -1,15 +1,23 @@
 # Despliegue en Vercel
 
-## ⚠️ Si te aparece "This page doesn't exist / 404 NOT_FOUND"
+Esta carpeta (`vercel/`) es **autocontenida**: ya no depende de `../../backend`. Las rutas de
+Express que antes vivían solo en `backend/routes/` están copiadas dentro de
+`vercel/backend/routes/` y `vercel/backend/middleware/`, para que todo lo que las Serverless
+Functions necesitan (código + `node_modules` de `vercel/package.json`) esté dentro del mismo
+Root Directory. Si editas la lógica de negocio, recuerda mantener sincronizadas ambas copias
+(`backend/routes/*.js` para Docker/Nginx, y `vercel/backend/routes/*.js` para Vercel).
 
-Casi siempre es una de estas dos causas:
+## ⚠️ Checklist de errores ya solucionados
 
-1. **Root Directory mal configurado**: si subiste el ZIP completo `proyecto-c2c/` (con `backend/`,
-   `frontend/`, `vercel/`, etc.), en el dashboard de Vercel ve a **Settings → General → Root
-   Directory** y ponlo en `vercel` (la subcarpeta), no en la raíz del repo. Vercel necesita que
-   `vercel.json`, `api/` y `public/` estén en la raíz del Root Directory que configures.
-2. **No había `index.html`**: ya se agregó `public/index.html`, que redirige automáticamente a
-   `/register/register.html`.
+1. **404 NOT_FOUND en `/`**: causado por no tener `index.html` en `public/`. Ya se agregó
+   `public/index.html`, que redirige a `/register/register.html`.
+2. **Root Directory mal configurado**: en el dashboard de Vercel, **Settings → General → Root
+   Directory**, debe apuntar a la carpeta `vercel` dentro de tu repo (no a la raíz).
+3. **500 "Cannot find module 'express'"**: pasaba porque las funciones importaban
+   `../../backend/routes/*.js`, un archivo *fuera* del Root Directory, así que sus
+   `node_modules` no se instalaban. Ya está resuelto copiando esas rutas dentro de
+   `vercel/backend/`. Con este cambio **no** necesitas activar "Include files outside of the
+   Root Directory".
 
 ## Pasos
 
