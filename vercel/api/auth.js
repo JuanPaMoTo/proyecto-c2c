@@ -5,7 +5,7 @@ const express = require('express');
 const serverless = require('serverless-http');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const authRouter = require('../backend/routes/auth');
+const authRouter = require('../../backend/routes/auth');
 
 const app = express();
 app.use(cors());

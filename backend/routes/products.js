@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const authMiddleware = require('../middleware/auth');
 
+require('../models/User');
+
 const router = express.Router();
 
 const productSchema = new mongoose.Schema({

@@ -5,7 +5,7 @@ const express = require('express');
 const serverless = require('serverless-http');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const productsRouter = require('../backend/routes/products');
+const productsRouter = require('../../backend/routes/products');
 
 const app = express();
 app.use(cors());
