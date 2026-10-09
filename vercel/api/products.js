@@ -7,6 +7,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const productsRouter = require('../../backend/routes/products');
 
+if (!mongoose.models.User) {
+  mongoose.model('User', new mongoose.Schema({}, { strict: false }));
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
