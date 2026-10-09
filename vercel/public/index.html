@@ -4,293 +4,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GIATE Marketplace</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: #111111;
-      color: #f5f5f5;
-      font-family: Arial, sans-serif;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #050505;
-      border-bottom: 1px solid #222;
-    }
-
-    .navbar {
-      max-width: 1400px;
-      min-height: 82px;
-      margin: auto;
-      padding: 15px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 22px;
-    }
-
-    .logo {
-      color: #20c45a;
-      font-size: 27px;
-      font-weight: bold;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .buscador {
-      display: flex;
-      flex: 1;
-      max-width: 600px;
-      gap: 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      color: white;
-      background: #292929;
-      border: 1px solid #414141;
-      border-radius: 25px;
-      outline: none;
-    }
-
-    button, .boton {
-      padding: 12px 20px;
-      background: #20bd58;
-      color: #050505;
-      border: none;
-      border-radius: 25px;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .boton-secundario {
-      background: transparent;
-      color: white;
-      border: 1px solid #555;
-    }
-
-    .acciones {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    #nombreUsuario { color: white; }
-
-    .franja {
-      padding: 12px;
-      text-align: center;
-      color: #20c45a;
-      background: #07392b;
-      font-size: 13px;
-    }
-
-    main {
-      max-width: 1400px;
-      margin: auto;
-      padding: 32px 24px;
-    }
-
-    .titulo-seccion {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 25px;
-    }
-
-    .titulo-seccion h1 { font-size: 27px; }
-
-    #cantidad {
-      color: #ccc;
-      background: #202020;
-      border: 1px solid #333;
-      border-radius: 22px;
-      padding: 10px 15px;
-      font-size: 13px;
-    }
-
-    .catalogo {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 22px;
-    }
-
-    .producto {
-      overflow: hidden;
-      background: #191919;
-      border: 1px solid #292929;
-      border-radius: 18px;
-      transition: transform .2s, border-color .2s;
-    }
-
-    .producto:hover {
-      transform: translateY(-4px);
-      border-color: #20bd58;
-    }
-
-    .producto img {
-      display: block;
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      background: #080808;
-    }
-
-    .producto-info { padding: 18px; }
-
-    .categoria {
-      color: #20c45a;
-      font-size: 12px;
-    }
-
-    .producto h2 {
-      margin: 10px 0;
-      font-size: 18px;
-    }
-
-    .descripcion {
-      color: #bdbdbd;
-      font-size: 13px;
-      line-height: 1.5;
-      min-height: 40px;
-    }
-
-    .precio {
-      margin: 17px 0;
-      color: #20c45a;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .producto button { width: 100%; }
-
-    .mensaje {
-      padding: 30px 0;
-      color: #bbb;
-      text-align: center;
-      grid-column: 1 / -1;
-    }
-
-    @media (max-width: 760px) {
-      .navbar { flex-wrap: wrap; padding: 15px; }
-      .buscador { order: 3; flex-basis: 100%; max-width: none; }
-      .logo { font-size: 23px; }
-      .acciones { gap: 7px; }
-      .acciones .boton { padding: 10px 12px; font-size: 12px; }
-      main { padding: 20px 14px; }
-      .catalogo { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-      .producto img { height: 150px; }
-      .producto-info { padding: 12px; }
-      .producto h2 { font-size: 15px; }
-      .precio { font-size: 19px; }
-    }
-
-    @media (max-width: 390px) {
-      .catalogo { grid-template-columns: 1fr; }
-      .titulo-seccion h1 { font-size: 21px; }
-    }
-  </style>
+  <meta name="theme-color" content="#171a21">
+  <meta name="description" content="Nexora: descubre productos, compara precios y compra en nuestro marketplace.">
+  <title>Nexora Marketplace | Tienda</title>
+  <link rel="stylesheet" href="/theme.css">
 </head>
-
 <body>
-  <header>
-    <nav class="navbar">
-      <a class="logo" href="/">▣ GIATE.</a>
 
-      <form class="buscador" id="formBusqueda">
-        <input
-          id="busqueda"
-          type="search"
-          placeholder="¿Qué deseas buscar hoy?"
-          aria-label="Buscar productos"
-        >
-        <button type="submit" aria-label="Buscar">➜</button>
-      </form>
+  <main class="home-contenido">
+    <section class="home-banner">
+      <h1>Bienvenido a Nexora</h1>
+      <p>
+        Descubre productos, compara precios y encuentra lo que buscas
+        en un marketplace creado para conectar compradores y vendedores.
+      </p>
 
-      <div class="acciones" id="accionesUsuario">
-        <a class="boton boton-secundario"
-           href="/login/login.html">Iniciar Sesión</a>
-        <a class="boton" href="/register/register.html">Registrarse</a>
-      </div>
-    </nav>
-
-    <div class="franja">
-      ⚡ GIATE MARKETPLACE: Sistema de comercio directo de usuario a usuario.
-    </div>
-  </header>
-
-  <main>
-    <section class="titulo-seccion">
-      <h1>Publicaciones Recientes</h1>
-      <span id="cantidad">Cargando...</span>
+      <a
+        href="/search/search.html"
+        style="display:inline-block;padding:12px 18px;background:#1a9fff;color:white;border-radius:4px"
+      >
+        Explorar productos
+      </a>
     </section>
 
-    <section id="catalogo" class="catalogo" aria-live="polite">
-      <p class="mensaje">Cargando productos...</p>
+    <section>
+      <h2 class="home-seccion-titulo">Productos disponibles</h2>
+
+      <div id="catalogo" class="home-catalogo" aria-live="polite">
+        <p>Cargando productos...</p>
+      </div>
     </section>
   </main>
 
+  <script src="/shared.js"></script>
+
   <script>
-    const API_BASE = '/api';
     const catalogo = document.getElementById('catalogo');
-    const cantidad = document.getElementById('cantidad');
-    const inputBusqueda = document.getElementById('busqueda');
-
-    // Mostrar los botones adecuados según la sesión
-    function actualizarNavbar() {
-      const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
-      const token = localStorage.getItem('token');
-      const acciones = document.getElementById('accionesUsuario');
-
-      if (token && usuario) {
-        const nombre = document.createElement('span');
-        nombre.id = 'nombreUsuario';
-        nombre.textContent = 'Hola, ' + (usuario.nombre || 'Usuario');
-
-        const salir = document.createElement('button');
-        salir.className = 'boton boton-secundario';
-        salir.textContent = 'Cerrar Sesión';
-        salir.onclick = () => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('usuario');
-          window.location.href = '/';
-        };
-
-        acciones.replaceChildren(nombre, salir);
-      }
-    }
-
-    function crearElemento(etiqueta, clase, texto) {
-      const elemento = document.createElement(etiqueta);
-      if (clase) elemento.className = clase;
-      if (texto !== undefined) elemento.textContent = texto;
-      return elemento;
-    }
 
     async function cargarProductos() {
-      catalogo.replaceChildren(
-        crearElemento('p', 'mensaje', 'Cargando productos...')
-      );
+      catalogo.replaceChildren();
+
+      const cargando = document.createElement('p');
+      cargando.textContent = 'Cargando productos...';
+      catalogo.appendChild(cargando);
 
       try {
-        const params = new URLSearchParams();
-        const busqueda = inputBusqueda.value.trim();
-
-        if (busqueda) params.set('search', busqueda);
-
-        const respuesta = await fetch(
-          `${API_BASE}/products?${params.toString()}`
-        );
+        const respuesta = await fetch('/api/products');
 
         if (!respuesta.ok) {
           throw new Error('No se pudieron consultar los productos');
@@ -300,80 +59,94 @@
         const productos = datos.productos || [];
 
         catalogo.replaceChildren();
-        cantidad.textContent = `${productos.length} publicaciones`;
 
         if (productos.length === 0) {
-          catalogo.appendChild(
-            crearElemento('p', 'mensaje', 'No se encontraron productos disponibles.')
-          );
+          const mensaje = document.createElement('p');
+          mensaje.textContent =
+            'Todavía no hay productos disponibles.';
+          catalogo.appendChild(mensaje);
           return;
         }
 
         productos.forEach(producto => {
-          const tarjeta = crearElemento('article', 'producto');
+          const tarjeta = document.createElement('article');
+          tarjeta.className = 'home-producto';
 
           const imagen = document.createElement('img');
           imagen.src = producto.imagenes?.[0] ||
-            'https://placehold.co/400x300/191919/20c45a?text=GIATE';
+            'https://placehold.co/400x300/16202d/66c0f4?text=Nexora';
+
           imagen.alt = producto.titulo || 'Producto';
           imagen.loading = 'lazy';
-          imagen.onerror = () => {
-            imagen.onerror = null;
-            imagen.src = 'https://placehold.co/400x300/191919/20c45a?text=Sin+imagen';
+
+          imagen.onerror = function () {
+            this.onerror = null;
+            this.src =
+              'https://placehold.co/400x300/16202d/66c0f4?text=Sin+imagen';
           };
 
-          const info = crearElemento('div', 'producto-info');
-          info.appendChild(
-            crearElemento('span', 'categoria', producto.categoria || 'General')
-          );
-          info.appendChild(
-            crearElemento('h2', '', producto.titulo || 'Producto sin título')
-          );
-          info.appendChild(
-            crearElemento('p', 'descripcion', producto.descripcion || 'Sin descripción disponible.')
+          const info = document.createElement('div');
+          info.className = 'home-producto-info';
+
+          const categoria = document.createElement('p');
+          categoria.className = 'categoria';
+          categoria.textContent = producto.categoria || 'General';
+
+          const titulo = document.createElement('h3');
+          titulo.textContent =
+            producto.titulo || 'Producto sin título';
+
+          const descripcion = document.createElement('p');
+          descripcion.textContent =
+            producto.descripcion || 'Sin descripción disponible.';
+
+          const precio = document.createElement('p');
+          precio.className = 'precio';
+          precio.textContent = '$' +
+            Number(producto.precio || 0).toLocaleString('es-CO');
+
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.textContent = 'Ver producto';
+
+          boton.addEventListener('click', () => {
+            if (!producto._id) return;
+
+            window.location.href =
+              '/checkout/checkout.html?id=' +
+              encodeURIComponent(producto._id);
+          });
+
+          info.append(
+            categoria,
+            titulo,
+            descripcion,
+            precio,
+            boton
           );
 
-          const precio = crearElemento(
-            'p',
-            'precio',
-            '$ ' + Number(producto.precio || 0).toLocaleString('es-CO')
-          );
-          info.appendChild(precio);
-
-          const comprar = crearElemento('button', '', 'Ver producto');
-          comprar.type = 'button';
-          comprar.onclick = () => {
-            if (producto._id) {
-              window.location.href =
-                '/checkout/checkout.html?id=' +
-                encodeURIComponent(producto._id);
-            }
-          };
-
-          info.appendChild(comprar);
           tarjeta.append(imagen, info);
           catalogo.appendChild(tarjeta);
         });
+
       } catch (error) {
-        console.error(error);
-        cantidad.textContent = 'Catálogo';
-        catalogo.replaceChildren(
-          crearElemento(
-            'p',
-            'mensaje',
-            'No fue posible cargar los productos. Intenta nuevamente.'
-          )
-        );
+        console.error('Error cargando productos:', error);
+        catalogo.replaceChildren();
+
+        const mensaje = document.createElement('p');
+        mensaje.textContent =
+          'No fue posible cargar los productos. Intenta nuevamente.';
+
+        const reintentar = document.createElement('button');
+        reintentar.textContent = 'Reintentar';
+        reintentar.addEventListener('click', cargarProductos);
+
+        catalogo.append(mensaje, reintentar);
       }
     }
 
-    document.getElementById('formBusqueda').addEventListener('submit', e => {
-      e.preventDefault();
-      cargarProductos();
-    });
-
-    actualizarNavbar();
     cargarProductos();
   </script>
+
 </body>
 </html>

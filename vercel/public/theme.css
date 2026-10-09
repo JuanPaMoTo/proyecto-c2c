@@ -1,0 +1,672 @@
+
+/* =========================================
+   NEXORA MARKETPLACE - TEMA STEAM
+   Estilos compartidos para toda la aplicación
+========================================= */
+
+:root {
+  --fondo: #1b2838;
+  --fondo-oscuro: #171a21;
+  --fondo-panel: #213448;
+  --fondo-tarjeta: #16202d;
+  --borde: #334b60;
+  --texto: #c7d5e0;
+  --texto-claro: #ffffff;
+  --texto-suave: #8f98a0;
+  --azul: #66c0f4;
+  --azul-oscuro: #1a9fff;
+  --azul-hover: #1999e8;
+  --verde: #a4d007;
+  --error: #ff6b6b;
+  --radio: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0 !important;
+  min-height: 100vh;
+  background: var(--fondo) !important;
+  color: var(--texto) !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 14px;
+}
+
+h1, h2, h3, h4 {
+  color: var(--texto-claro) !important;
+}
+
+p {
+  line-height: 1.6;
+}
+
+a {
+  color: var(--azul);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* BARRA SUPERIOR */
+
+.giate-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: var(--fondo-oscuro);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .25);
+}
+
+.giate-header-top {
+  max-width: 1200px;
+  min-height: 76px;
+  margin: auto;
+  padding: 12px 22px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.giate-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  color: #ffffff !important;
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
+.giate-logo span {
+  color: var(--azul);
+}
+
+.giate-search {
+  display: flex;
+  flex: 1;
+  max-width: 550px;
+  gap: 5px;
+}
+
+.giate-search input {
+  min-width: 0;
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #35485a !important;
+  border-radius: var(--radio) !important;
+  background: #263747 !important;
+  color: #ffffff !important;
+}
+
+.giate-search input::placeholder {
+  color: #a5b1bd;
+}
+
+.giate-search button {
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radio);
+  background: var(--azul-oscuro);
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.giate-search button:hover {
+  background: var(--azul-hover);
+}
+
+.giate-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.giate-nav-links a,
+.giate-nav-links button {
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.giate-nav-links .giate-btn {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: var(--radio);
+  background: linear-gradient(90deg, #06bfff, #2d73ff);
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.giate-nav-links .giate-btn:hover {
+  filter: brightness(1.15);
+}
+
+.giate-nav-links .giate-btn-secundario {
+  padding: 9px 12px;
+  border: 1px solid #526779;
+  border-radius: var(--radio);
+  background: transparent;
+  color: var(--texto);
+}
+
+.giate-nav-links .giate-btn-secundario:hover {
+  border-color: var(--azul);
+  color: #ffffff;
+}
+
+.giate-subnav {
+  background: linear-gradient(90deg, #17405a, #1a6b91, #17405a);
+}
+
+.giate-subnav-inner {
+  max-width: 1200px;
+  min-height: 40px;
+  margin: auto;
+  padding: 10px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.giate-subnav a {
+  color: #e5f6ff;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.giate-subnav a:hover {
+  color: #ffffff;
+}
+
+/* CONTENIDO GENERAL */
+
+main,
+.layout,
+.contenedor {
+  color: var(--texto);
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 650px;
+  margin: 36px auto !important;
+  padding: 0 18px;
+}
+
+.tarjeta,
+.tarjeta-producto,
+.producto {
+  background: var(--fondo-tarjeta) !important;
+  color: var(--texto) !important;
+  border: 1px solid var(--borde) !important;
+  border-radius: var(--radio) !important;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .18);
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+}
+
+.tarjeta h1,
+.tarjeta h2 {
+  margin-top: 0;
+  color: #ffffff !important;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  color: var(--texto) !important;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+textarea,
+select {
+  width: 100%;
+  padding: 11px 12px;
+  margin-top: 6px;
+  border: 1px solid #40566a !important;
+  border-radius: var(--radio) !important;
+  background: #101822 !important;
+  color: #ffffff !important;
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--azul) !important;
+  box-shadow: 0 0 0 2px rgba(102, 192, 244, .13);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8f98a0;
+}
+
+input.invalido {
+  border-color: var(--error) !important;
+}
+
+.error {
+  display: block;
+  min-height: 16px;
+  margin-top: 4px;
+  color: var(--error) !important;
+  font-size: 12px;
+}
+
+.fortaleza {
+  min-height: 16px;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.fortaleza.debil {
+  color: var(--error);
+}
+
+.fortaleza.media {
+  color: #e8c547;
+}
+
+.fortaleza.fuerte {
+  color: var(--verde);
+}
+
+button,
+.btn-comprar {
+  padding: 12px 16px;
+  border: 0;
+  border-radius: var(--radio) !important;
+  background: linear-gradient(90deg, #06bfff, #2d73ff) !important;
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+button:hover:not(:disabled),
+.btn-comprar:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+button:disabled {
+  background: #526779 !important;
+  color: #bdc8d1 !important;
+}
+
+.mensaje {
+  text-align: center;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* PÁGINA DE BÚSQUEDA */
+
+.barra-busqueda {
+  position: static !important;
+  display: flex;
+  gap: 8px;
+  padding: 18px 22px !important;
+  background: var(--fondo-panel) !important;
+}
+
+.barra-busqueda input {
+  flex: 1;
+}
+
+.layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  max-width: 1200px;
+  margin: 26px auto !important;
+  padding: 0 22px !important;
+}
+
+.filtros {
+  flex-shrink: 0;
+  width: 240px;
+  padding: 20px;
+  background: var(--fondo-panel) !important;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: none !important;
+}
+
+.filtros h2 {
+  margin-top: 0;
+}
+
+.filtros label {
+  margin-top: 16px;
+}
+
+.filtros button {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.resultados {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-content: start;
+  gap: 16px;
+}
+
+.tarjeta-producto {
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s, border-color .2s;
+}
+
+.tarjeta-producto:hover {
+  transform: translateY(-3px);
+  border-color: var(--azul) !important;
+}
+
+.tarjeta-producto img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background: #101822;
+}
+
+.tarjeta-producto .info {
+  padding: 15px;
+}
+
+.tarjeta-producto .titulo {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.tarjeta-producto .precio {
+  color: var(--azul) !important;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* PUBLICACIÓN DE PRODUCTOS */
+
+.fila {
+  display: flex;
+  gap: 16px;
+}
+
+.fila > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.previsualizacion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.previsualizacion img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+
+/* CHECKOUT Y CONFIRMACIÓN */
+
+.detalle-producto img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  background: #101822;
+}
+
+.detalle-producto .precio {
+  color: var(--azul) !important;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.checkout {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-comprar {
+  width: 100%;
+}
+
+/* INICIO / CATÁLOGO */
+
+.home-contenido {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 22px;
+}
+
+.home-banner {
+  margin-bottom: 28px;
+  padding: 30px;
+  background: linear-gradient(115deg, #16435f, #1c6b91);
+  border: 1px solid #317ca1;
+  border-radius: var(--radio);
+}
+
+.home-banner h1 {
+  margin-top: 0;
+  font-size: 30px;
+}
+
+.home-banner p {
+  max-width: 650px;
+  color: #d7eaf5;
+}
+
+.home-seccion-titulo {
+  margin: 30px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--borde);
+  font-size: 21px;
+}
+
+.home-catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.home-producto {
+  overflow: hidden;
+  background: var(--fondo-tarjeta);
+  border: 1px solid var(--borde);
+  transition: transform .2s, border-color .2s;
+}
+
+.home-producto:hover {
+  transform: translateY(-3px);
+  border-color: var(--azul);
+}
+
+.home-producto img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #101822;
+}
+
+.home-producto-info {
+  padding: 16px;
+}
+
+.home-producto-info h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.home-producto-info .precio {
+  color: var(--azul);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.home-producto-info .categoria {
+  color: var(--texto-suave);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.home-producto-info button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+  .giate-header-top {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .giate-search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .giate-nav-links {
+    margin-left: auto;
+    gap: 8px;
+  }
+
+  .layout {
+    flex-direction: column;
+  }
+
+  .filtros {
+    width: 100%;
+  }
+
+  .resultados {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .giate-header-top {
+    padding: 12px;
+  }
+
+  .giate-logo {
+    font-size: 22px;
+  }
+
+  .giate-nav-links {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .giate-nav-links a,
+  .giate-nav-links button {
+    font-size: 11px;
+  }
+
+  .giate-nav-links .giate-btn,
+  .giate-nav-links .giate-btn-secundario {
+    padding: 8px;
+  }
+
+  .giate-subnav-inner {
+    gap: 14px;
+    padding: 10px 12px;
+  }
+
+  .contenedor {
+    margin: 20px auto !important;
+    padding: 0 12px;
+  }
+
+  .tarjeta {
+    padding: 20px;
+  }
+
+  .fila {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .home-contenido {
+    padding: 0 12px;
+  }
+
+  .home-banner {
+    padding: 20px;
+  }
+
+  .home-banner h1 {
+    font-size: 24px;
+  }
+
+  .home-catalogo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .home-producto img {
+    height: 130px;
+  }
+
+  .home-producto-info {
+    padding: 10px;
+  }
+
+  .home-producto-info .precio {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 360px) {
+  .home-catalogo {
+    grid-template-columns: 1fr;
+  }
+}
