@@ -6,6 +6,10 @@ const Stripe = require('stripe');
 const authMiddleware = require('../middleware/auth');
 const { Product } = require('./products');
 
+require('../../backend/models/User'); // <-- Esta es la línea que soluciona el error
+
+const Order = require('../../backend/models/Order');
+
 const router = express.Router();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy');
 
