@@ -1,31 +1,31 @@
 // api/orders.js
-// Adaptación a Vercel: /api/orders/* como Serverless Function (HU-04)
+// Función serverless de Vercel para /api/orders/*
 const express = require('express');
-const serverless = require('serverless-http');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const ordersRouter = require('../../backend/routes/orders');
-
-if (!mongoose.models.User) {
-  mongoose.model('User', new mongoose.Schema({}, { strict: false }));
-}
-
-const Order = require('../../backend/models/Order');
+const connectDB = require('../backend/db');
+const router = require('../backend/routes/orders');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-let conectado = false;
+// Conecta a MongoDB antes de atender cualquier petición
 app.use(async (req, res, next) => {
-  if (!conectado) {
-    await mongoose.connect(process.env.MONGO_URI);
-    conectado = true;
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Error de conexión a MongoDB:', err.message);
+    res.status(500).json({ error: 'No se pudo conectar a la base de datos: ' + err.message });
   }
-  next();
 });
 
-app.use('/api/orders', ordersRouter);
+app.use('/api/orders', router);
+
+// Manejador de errores
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message || 'Error interno del servidor' });
+});
 
 module.exports = app;
-module.exports.handler = serverless(app);

@@ -1,27 +1,31 @@
 // api/auth.js
-// Adaptación a Vercel: la ruta /api/auth/* se convierte en una Serverless Function
-// Reutiliza la misma lógica de negocio de HU-01 empaquetada con Express + serverless-http
+// Función serverless de Vercel para /api/auth/*
 const express = require('express');
-const serverless = require('serverless-http');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const authRouter = require('../../backend/routes/auth');
+const connectDB = require('../backend/db');
+const router = require('../backend/routes/auth');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión reutilizable entre invocaciones (evita reconectar en cada cold start)
-let conectado = false;
+// Conecta a MongoDB antes de atender cualquier petición
 app.use(async (req, res, next) => {
-  if (!conectado) {
-    await mongoose.connect(process.env.MONGO_URI);
-    conectado = true;
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Error de conexión a MongoDB:', err.message);
+    res.status(500).json({ error: 'No se pudo conectar a la base de datos: ' + err.message });
   }
-  next();
 });
 
-app.use('/api/auth', authRouter);
+app.use('/api/auth', router);
+
+// Manejador de errores
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message || 'Error interno del servidor' });
+});
 
 module.exports = app;
-module.exports.handler = serverless(app);

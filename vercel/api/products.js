@@ -1,30 +1,31 @@
 // api/products.js
-// Adaptación a Vercel: /api/products/* como Serverless Function (HU-02 y HU-03)
-// Nota: Multer con memoryStorage funciona en Vercel; el límite de payload es 4.5MB por invocación.
+// Función serverless de Vercel para /api/products/*
 const express = require('express');
-const serverless = require('serverless-http');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const productsRouter = require('../../backend/routes/products');
-
-if (!mongoose.models.User) {
-  mongoose.model('User', new mongoose.Schema({}, { strict: false }));
-}
+const connectDB = require('../backend/db');
+const router = require('../backend/routes/products');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-let conectado = false;
+// Conecta a MongoDB antes de atender cualquier petición
 app.use(async (req, res, next) => {
-  if (!conectado) {
-    await mongoose.connect(process.env.MONGO_URI);
-    conectado = true;
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Error de conexión a MongoDB:', err.message);
+    res.status(500).json({ error: 'No se pudo conectar a la base de datos: ' + err.message });
   }
-  next();
 });
 
-app.use('/api/products', productsRouter);
+app.use('/api/products', router);
+
+// Manejador de errores
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message || 'Error interno del servidor' });
+});
 
 module.exports = app;
-module.exports.handler = serverless(app);
