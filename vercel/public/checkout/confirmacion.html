@@ -1,36 +1,134 @@
-<!-- HU-04: Pantalla de confirmación/recibo tras la compra -->
+<!-- HU-04: Confirmación de compra de Nexora -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confirmación de compra \| Nexora</title>
-  <link rel="stylesheet" href="checkout.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171a21">
+  <title>Confirmación de compra | Nexora</title>
+  <link rel="stylesheet" href="checkout.css">
 </head>
 <body>
+  <header class="navbar">
+    <a class="marca" href="/">
+      <span class="marca-icono">N</span>
+      <span>NEXORA</span>
+    </a>
+
+    <nav class="nav-enlaces" aria-label="Navegación principal">
+      <a href="/">Inicio</a>
+      <a href="/search/search.html">Explorar productos</a>
+    </nav>
+  </header>
+
   <main class="contenedor">
-    <section class="tarjeta" id="recibo" style="text-align:center">
-      <h1>✅ ¡Compra realizada!</h1>
-      <div id="detalleOrden">Cargando recibo...</div>
-      <a href="../search/search.html">Seguir comprando</a>
+    <section class="tarjeta" id="recibo" aria-live="polite">
+      <h1>Procesando tu recibo...</h1>
+      <div id="detalleOrden">
+        <p class="estado-carga">Consultando los datos del pedido...</p>
+      </div>
+      <a href="/search/search.html">Seguir comprando</a>
     </section>
   </main>
-  <script>
-    const API_BASE = window.API_BASE_URL || '/api';
-    const ordenId = new URLSearchParams(window.location.search).get('orden');
-    const token = localStorage.getItem('token');
 
-    fetch(`${API_BASE}/orders/${ordenId}`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json())
-      .then((datos) => {
+  <footer class="pie">
+    <span>NEXORA</span>
+    <span>Gracias por visitar nuestro marketplace.</span>
+  </footer>
+
+  <script>
+    const API_BASE = window.API_BASE_URL || "/api";
+    const ordenId = new URLSearchParams(window.location.search).get("orden");
+    const token = localStorage.getItem("token");
+    const recibo = document.getElementById("recibo");
+    const detalle = document.getElementById("detalleOrden");
+
+    function escaparHTML(valor) {
+      return String(valor ?? "").replace(/[&<>"']/g, (caracter) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[caracter]);
+    }
+
+    function formatearPrecio(valor) {
+      const numero = Number(valor);
+
+      if (!Number.isFinite(numero) || numero < 0) {
+        return "No disponible";
+      }
+
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+      }).format(numero);
+    }
+
+    async function cargarRecibo() {
+      if (!ordenId || !token) {
+        recibo.querySelector("h1").textContent = "No se pudo consultar el pedido";
+        detalle.innerHTML = `
+          <p>Falta el identificador del pedido o tu sesión ha caducado.</p>
+        `;
+        return;
+      }
+
+      try {
+        const respuesta = await fetch(
+          `${API_BASE}/orders/${encodeURIComponent(ordenId)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        const texto = await respuesta.text();
+        let datos = {};
+
+        try {
+          datos = texto ? JSON.parse(texto) : {};
+        } catch {
+          datos = { error: texto.slice(0, 200) };
+        }
+
+        if (!respuesta.ok || !datos.orden) {
+          console.error("Error al consultar el recibo:", respuesta.status, datos);
+
+          recibo.querySelector("h1").textContent = "No se pudo cargar el recibo";
+          detalle.textContent =
+            datos.error ||
+            `No se encontró el pedido (HTTP ${respuesta.status}).`;
+
+          return;
+        }
+
         const orden = datos.orden;
-        document.getElementById('detalleOrden').innerHTML = orden
-          ? `<p>Orden: ${orden._id}</p><p>Producto: ${orden.productoId?.titulo || ''}</p><p>Monto: $${orden.monto}</p><p>Estado: ${orden.estado}</p>`
-          : '<p>No se encontró el recibo.</p>';
-      })
-      .catch(() => {
-        document.getElementById('detalleOrden').innerHTML = '<p>No se pudo cargar el recibo.</p>';
-      });
+        const nombreProducto =
+          typeof orden.productoId === "object"
+            ? orden.productoId?.titulo || "Producto"
+            : "Producto";
+
+        recibo.querySelector("h1").textContent = "✓ ¡Compra realizada!";
+
+        detalle.innerHTML = `
+          <p><strong>Número de pedido:</strong> ${escaparHTML(orden._id)}</p>
+          <p><strong>Producto:</strong> ${escaparHTML(nombreProducto)}</p>
+          <p><strong>Monto:</strong> ${formatearPrecio(orden.monto)}</p>
+          <p><strong>Estado:</strong> ${escaparHTML(orden.estado)}</p>
+        `;
+      } catch (error) {
+        console.error("Error de conexión al consultar el recibo:", error);
+
+        recibo.querySelector("h1").textContent = "Error de conexión";
+        detalle.textContent =
+          "No fue posible consultar el pedido. Inténtalo de nuevo más tarde.";
+      }
+    }
+
+    cargarRecibo();
   </script>
 </body>
 </html>

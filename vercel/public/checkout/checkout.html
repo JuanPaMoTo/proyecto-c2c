@@ -1,37 +1,105 @@
-<!-- HU-04: Proceso de Compra de Producto -->
+```html
+<!-- HU-04: Proceso de compra de productos en Nexora -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Comprar producto \| Nexora</title>
-  <link rel="stylesheet" href="checkout.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171a21">
+  <title>Comprar producto | Nexora</title>
+  <link rel="stylesheet" href="checkout.css">
+  <script src="checkout.js" defer></script>
 </head>
 <body>
+  <header class="navbar">
+    <a class="marca" href="/" aria-label="Nexora, página principal">
+      <span class="marca-icono">N</span>
+      <span>NEXORA</span>
+    </a>
+
+    <nav class="nav-enlaces" aria-label="Navegación principal">
+      <a href="/">Inicio</a>
+      <a href="/search/search.html">Explorar productos</a>
+      <a href="/publish/publish.html">Vender</a>
+    </nav>
+
+    <a class="btn-volver" href="/search/search.html">
+      ← Volver al catálogo
+    </a>
+  </header>
+
   <main class="contenedor">
-    <section class="detalle-producto tarjeta" id="detalleProducto">
-      <p>Cargando producto...</p>
+    <section class="encabezado">
+      <p class="etiqueta">NEXORA MARKETPLACE</p>
+      <h1>Finaliza tu compra</h1>
+      <p>Revisa el producto y completa los datos de tu pedido.</p>
     </section>
 
-    <form id="formCheckout" class="checkout tarjeta">
-      <h2>Datos de entrega y pago</h2>
+    <div class="columnas">
+      <section
+        class="tarjeta detalle-producto"
+        id="detalleProducto"
+        aria-live="polite"
+      >
+        <p class="estado-carga">Cargando producto...</p>
+      </section>
 
-      <label for="direccion">Dirección de entrega</label>
-      <textarea id="direccion" rows="3" required></textarea>
+      <form id="formCheckout" class="tarjeta checkout">
+        <div class="titulo-formulario">
+          <span class="icono-seccion">01</span>
+          <div>
+            <h2>Datos de compra</h2>
+            <p>Completa la información solicitada.</p>
+          </div>
+        </div>
 
-      <label for="metodoPago">Método de pago</label>
-      <select id="metodoPago" required>
-        <option value="tarjeta">Tarjeta de crédito/débito</option>
-        <option value="mercadopago">MercadoPago</option>
-      </select>
+        <label for="direccion">Dirección de entrega</label>
+        <textarea
+          id="direccion"
+          rows="3"
+          placeholder="Calle, número, ciudad..."
+          required
+        ></textarea>
 
-      <label for="numeroTarjeta">Número de tarjeta (simulado)</label>
-      <input type="text" id="numeroTarjeta" placeholder="4242 4242 4242 4242" required />
+        <label for="metodoPago">Método de pago</label>
+        <select id="metodoPago" required>
+          <option value="tarjeta">Tarjeta de crédito/débito (simulado)</option>
+          <option value="mercadopago">MercadoPago (simulado)</option>
+        </select>
 
-      <button type="button" id="btnComprar" class="btn-comprar">Comprar Ahora</button>
-      <p class="mensaje" id="mensajeServidor" role="alert"></p>
-    </form>
+        <label for="numeroTarjeta">Número de tarjeta (simulado)</label>
+        <input
+          type="text"
+          id="numeroTarjeta"
+          placeholder="4242 4242 4242 4242"
+          autocomplete="off"
+          required
+        >
+
+        <p class="aviso-pago">
+          Esta versión es una demostración. No introduzcas datos de una
+          tarjeta real: el pago depende de la implementación de tu backend.
+        </p>
+
+        <div class="resumen">
+          <span>Total del producto</span>
+          <strong id="totalProducto">Cargando...</strong>
+        </div>
+
+        <button type="submit" id="btnComprar" class="btn-comprar" disabled>
+          Comprar ahora
+        </button>
+
+        <p class="mensaje" id="mensajeServidor" role="alert"></p>
+        <p class="nota-seguridad">Nexora · Compra de demostración</p>
+      </form>
+    </div>
   </main>
-  <script src="checkout.js"></script>
+
+  <footer class="pie">
+    <span>NEXORA</span>
+    <span>Tu próximo descubrimiento comienza aquí.</span>
+  </footer>
 </body>
 </html>
+```

@@ -1,13 +1,383 @@
-/* HU-04: Estilos del checkout / confirmación de compra */
-* { box-sizing: border-box; }
-body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; margin: 0; }
-.contenedor { max-width: 520px; margin: 40px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
-.tarjeta { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-.detalle-producto img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-.detalle-producto .precio { font-size: 1.4rem; font-weight: 700; color: #4f46e5; }
-h2 { margin-top: 0; }
-label { display: block; margin-top: 14px; font-size: 0.85rem; font-weight: 600; }
-input, select, textarea { width: 100%; padding: 10px 12px; margin-top: 6px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; font-family: inherit; }
-.btn-comprar { margin-top: 22px; width: 100%; padding: 14px; border: none; border-radius: 8px; background: #16a34a; color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; }
-.btn-comprar:disabled { background: #a5a5c9; cursor: not-allowed; }
-.mensaje { text-align: center; font-size: 0.85rem; margin-top: 12px; }
+/* HU-04: Diseño de compra y confirmación de Nexora */
+
+:root {
+  color-scheme: dark;
+  --fondo: #171a21;
+  --panel: #202631;
+  --panel-secundario: #1b2838;
+  --borde: #35465b;
+  --texto: #f1f5f9;
+  --texto-secundario: #a8b4c5;
+  --azul: #66c0f4;
+  --azul-hover: #8bd0fa;
+  --verde: #a4d007;
+  --error: #ff7777;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--fondo);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--texto);
+  background:
+    radial-gradient(ellipse at 50% 0%, #20374b 0%, transparent 55%),
+    var(--fondo);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.navbar {
+  min-height: 76px;
+  padding: 14px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: rgba(23, 26, 33, 0.96);
+  border-bottom: 1px solid #304154;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--azul);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.marca-icono {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #66c0f4, #287bb5);
+  color: #10202e;
+  letter-spacing: 0;
+}
+
+.nav-enlaces {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.nav-enlaces a,
+.btn-volver {
+  color: #c7d5e0;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.nav-enlaces a:hover,
+.btn-volver:hover {
+  color: var(--azul);
+}
+
+.btn-volver {
+  padding: 10px 14px;
+  border: 1px solid #40566c;
+  border-radius: 5px;
+}
+
+.contenedor {
+  width: min(1100px, 92%);
+  margin: 42px auto 64px;
+}
+
+.encabezado {
+  margin-bottom: 30px;
+}
+
+.etiqueta {
+  color: var(--azul);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.encabezado h1 {
+  margin: 8px 0;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.encabezado > p:last-child {
+  color: var(--texto-secundario);
+  line-height: 1.6;
+}
+
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.tarjeta {
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: linear-gradient(145deg, #222c39, #1b222d);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+.detalle-producto {
+  overflow: hidden;
+}
+
+.detalle-producto img {
+  display: block;
+  width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+  border-radius: 5px;
+  background: #111820;
+}
+
+.detalle-producto h2,
+.detalle-producto h1 {
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+}
+
+.descripcion-producto {
+  color: #c5d1de;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.precio {
+  margin: 20px 0 4px;
+  color: var(--verde);
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.categoria-producto {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #30485e;
+  color: #c7e7fb;
+  font-size: 0.8rem;
+}
+
+.estado-carga {
+  color: var(--texto-secundario);
+  line-height: 1.6;
+}
+
+.titulo-formulario {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.icono-seccion {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: #2b4a63;
+  color: var(--azul);
+  font-weight: 800;
+}
+
+.titulo-formulario h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+
+.titulo-formulario p {
+  margin: 0;
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+}
+
+.checkout label {
+  display: block;
+  margin: 18px 0 8px;
+  color: #dce5ee;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.checkout input,
+.checkout select,
+.checkout textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px;
+  border: 1px solid #43566a;
+  border-radius: 5px;
+  outline: none;
+  background: #151c25;
+  color: var(--texto);
+  font: inherit;
+}
+
+.checkout textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.checkout input:focus,
+.checkout select:focus,
+.checkout textarea:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 2px rgba(102, 192, 244, 0.13);
+}
+
+.aviso-pago {
+  padding: 12px;
+  border-left: 3px solid var(--azul);
+  background: #1a2c3b;
+  color: #c5d9e9;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.resumen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 18px 0;
+  border-top: 1px solid var(--borde);
+  color: #c5d1de;
+}
+
+.resumen strong {
+  color: var(--verde);
+  font-size: 1.3rem;
+}
+
+.btn-comprar {
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #75ad20, #a4d007);
+  color: #14200a;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.btn-comprar:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-comprar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mensaje {
+  min-height: 20px;
+  color: var(--error);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.nota-seguridad {
+  color: #8798aa;
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+.pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 22px 5%;
+  border-top: 1px solid #304154;
+  color: #8798aa;
+  font-size: 0.8rem;
+}
+
+.pie span:first-child {
+  color: var(--azul);
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+#recibo a {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 18px;
+  border-radius: 5px;
+  background: #66c0f4;
+  color: #14202b;
+  font-weight: 700;
+}
+
+#detalleOrden p {
+  color: #d4deea;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .navbar {
+    padding: 14px 4%;
+  }
+
+  .nav-enlaces {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+
+  .contenedor {
+    margin-top: 28px;
+  }
+
+  .columnas {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .btn-volver {
+    font-size: 0.8rem;
+  }
+
+  .nav-enlaces {
+    font-size: 0.82rem;
+  }
+}
