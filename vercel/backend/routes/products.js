@@ -1,25 +1,13 @@
-// routes/products.js
-// HU-02: Publicación de un Producto para la Venta -> POST /api/products
-// HU-03: Búsqueda y Filtrado de Productos -> GET /api/products
+// backend/routes/products.js
+// HU-02: Publicar producto -> POST /api/products
+// HU-03: Buscar y filtrar  -> GET  /api/products
 const express = require('express');
 const mongoose = require('mongoose');
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
 const authMiddleware = require('../middleware/auth');
+require('../models/User'); // registra el modelo User (necesario para populate)
 
 const router = express.Router();
 
-// Configuración de Cloudinary (almacenamiento de imágenes)
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// Multer: recibe archivos en memoria antes de subirlos a Cloudinary
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
-
-// Modelo de Producto
 const productSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
   descripcion: { type: String, required: true },
@@ -30,90 +18,112 @@ const productSchema = new mongoose.Schema({
   estado: { type: String, enum: ['Disponible', 'Vendido'], default: 'Disponible' },
   createdAt: { type: Date, default: Date.now },
 });
-// Índice de texto para búsqueda eficiente por palabras clave (HU-03)
-productSchema.index({ titulo: 'text', descripcion: 'text' });
 
 const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
 
-// Utilidad para subir buffer a Cloudinary
-function subirImagen(buffer) {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream({ folder: 'c2c-productos' }, (err, result) => {
-      if (err) reject(err);
-      else resolve(result.secure_url);
-    });
-    stream.end(buffer);
-  });
+function escaparRegex(texto) {
+  return texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// POST /api/products (HU-02) - protegido por token
-router.post('/', authMiddleware, upload.array('imagenes', 5), async (req, res, next) => {
+// POST /api/products (protegido por token)
+router.post('/', authMiddleware, async (req, res, next) => {
   try {
-    const { titulo, descripcion, precio, categoria } = req.body;
+    const { titulo, descripcion, precio, categoria, imagen } = req.body;
 
-    if (!titulo || !descripcion || !precio || !categoria) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    if (!titulo?.trim() || !descripcion?.trim() || precio === undefined || precio === '' || !categoria?.trim()) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
     }
 
-    // Procesamiento y almacenamiento seguro de imágenes -> URLs
-    const urls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const url = await subirImagen(file.buffer);
-        urls.push(url);
+    const precioNumero = Number(precio);
+    if (!Number.isFinite(precioNumero) || precioNumero <= 0) {
+      return res.status(400).json({ error: 'El precio debe ser un número mayor que cero.' });
+    }
+
+    const imagenes = [];
+    if (imagen && String(imagen).trim()) {
+      try {
+        const url = new URL(String(imagen).trim());
+        if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+          return res.status(400).json({ error: 'El enlace de imagen debe ser una URL válida.' });
+        }
+        imagenes.push(url.href);
+      } catch {
+        return res.status(400).json({ error: 'Escribe un enlace de imagen válido.' });
       }
     }
 
     const producto = await Product.create({
-      titulo,
-      descripcion,
-      precio,
-      categoria,
-      imagenes: urls,
-      vendedorId: req.user.id, // vincula el producto con el usuario autenticado
+      titulo: titulo.trim(),
+      descripcion: descripcion.trim(),
+      precio: precioNumero,
+      categoria: categoria.trim(),
+      imagenes,
+      vendedorId: req.user.id,
     });
 
-    return res.status(201).json({ message: 'Producto publicado exitosamente', producto });
+    return res.status(201).json({ message: 'Producto publicado exitosamente.', producto });
   } catch (err) {
     next(err);
   }
 });
 
-// GET /api/products (HU-03) - búsqueda y filtrado, paginado
+// GET /api/products: búsqueda, filtros y paginación
 router.get('/', async (req, res, next) => {
   try {
     const { search, category, minPrice, maxPrice, page = 1, limit = 12 } = req.query;
 
+    const numeroPagina = Math.max(1, Number(page) || 1);
+    const limite = Math.min(50, Math.max(1, Number(limit) || 12));
+
     const filtro = { estado: 'Disponible' };
-    if (search) filtro.$text = { $search: search };
-    if (category) filtro.categoria = category;
-    if (minPrice || maxPrice) {
-      filtro.precio = {};
-      if (minPrice) filtro.precio.$gte = Number(minPrice);
-      if (maxPrice) filtro.precio.$lte = Number(maxPrice);
+
+    if (search && String(search).trim()) {
+      const regex = new RegExp(escaparRegex(String(search).trim()), 'i');
+      filtro.$or = [{ titulo: regex }, { descripcion: regex }];
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
+    if (category) filtro.categoria = category;
+
+    if (minPrice !== undefined && minPrice !== '') {
+      const minimo = Number(minPrice);
+      if (!Number.isFinite(minimo) || minimo < 0) {
+        return res.status(400).json({ error: 'Precio mínimo inválido.' });
+      }
+      filtro.precio = { ...filtro.precio, $gte: minimo };
+    }
+
+    if (maxPrice !== undefined && maxPrice !== '') {
+      const maximo = Number(maxPrice);
+      if (!Number.isFinite(maximo) || maximo < 0) {
+        return res.status(400).json({ error: 'Precio máximo inválido.' });
+      }
+      filtro.precio = { ...filtro.precio, $lte: maximo };
+    }
 
     const [productos, total] = await Promise.all([
-      Product.find(filtro).skip(skip).limit(Number(limit)).sort({ createdAt: -1 }),
+      Product.find(filtro).sort({ createdAt: -1 }).skip((numeroPagina - 1) * limite).limit(limite),
       Product.countDocuments(filtro),
     ]);
 
     return res.json({
       productos,
-      paginacion: { total, page: Number(page), limit: Number(limit), totalPages: Math.ceil(total / limit) },
+      paginacion: { total, page: numeroPagina, limit: limite, totalPages: Math.ceil(total / limite) },
     });
   } catch (err) {
     next(err);
   }
 });
 
-// GET /api/products/:id - detalle de producto (usado en el checkout del frontend)
+// GET /api/products/:id
 router.get('/:id', async (req, res, next) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({ error: 'El identificador del producto no es válido.' });
+    }
+
     const producto = await Product.findById(req.params.id).populate('vendedorId', 'nombre email');
-    if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
+    if (!producto) return res.status(404).json({ error: 'Producto no encontrado.' });
+
     return res.json({ producto });
   } catch (err) {
     next(err);
