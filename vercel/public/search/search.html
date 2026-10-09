@@ -1,45 +1,85 @@
-<!-- HU-03: Búsqueda y Filtrado de Productos -->
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explorar productos \| Nexora</title>
-  <link rel="stylesheet" href="search.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171a21">
+  <title>Explorar productos | Nexora</title>
+
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/search/search.css">
 </head>
 <body>
-  <header class="barra-busqueda">
-    <input type="text" id="inputBusqueda" placeholder="Buscar productos..." aria-label="Buscar productos" />
-    <button id="btnBuscar">Buscar</button>
-  </header>
 
-  <div class="layout">
-    <aside class="filtros" aria-label="Filtros de búsqueda">
-      <h2>Filtros</h2>
-      <label for="categoria">Categoría</label>
-      <select id="categoria">
-        <option value="">Todas</option>
-        <option value="electronica">Electrónica</option>
-        <option value="hogar">Hogar</option>
-        <option value="moda">Moda</option>
-        <option value="deportes">Deportes</option>
-        <option value="otros">Otros</option>
-      </select>
+  <main class="pagina-busqueda">
+    <section class="busqueda-intro">
+      <p class="etiqueta-seccion">NEXORA MARKETPLACE</p>
+      <h1>Explorar productos</h1>
+      <p>Encuentra productos, compara precios y descubre nuevas opciones.</p>
+    </section>
 
-      <label for="minPrice">Precio mínimo</label>
-      <input type="number" id="minPrice" min="0" />
+```
+<div class="layout">
+  <aside class="filtros" aria-label="Filtros de búsqueda">
+    <h2>Buscar y filtrar</h2>
 
-      <label for="maxPrice">Precio máximo</label>
-      <input type="number" id="maxPrice" min="0" />
+    <label for="inputBusqueda">Nombre del producto</label>
+    <input
+      type="search"
+      id="inputBusqueda"
+      placeholder="¿Qué estás buscando?"
+      aria-label="Buscar productos"
+    >
+    <button type="button" id="btnBuscar">Buscar</button>
 
-      <button id="btnAplicarFiltros">Aplicar filtros</button>
-    </aside>
+    <div class="separador-filtros"></div>
 
-    <main class="resultados" id="resultados" aria-live="polite">
-      <!-- Tarjetas de productos renderizadas dinámicamente -->
-    </main>
-  </div>
+    <label for="categoria">Categoría</label>
+    <select id="categoria">
+      <option value="">Todas las categorías</option>
+      <option value="electronica">Electrónica</option>
+      <option value="hogar">Hogar</option>
+      <option value="moda">Moda</option>
+      <option value="deportes">Deportes</option>
+      <option value="otros">Otros</option>
+    </select>
 
-  <script src="search.js"></script>
+    <label for="minPrice">Precio mínimo</label>
+    <input type="number" id="minPrice" min="0" placeholder="Ej. 10000">
+
+    <label for="maxPrice">Precio máximo</label>
+    <input type="number" id="maxPrice" min="0" placeholder="Ej. 100000">
+
+    <button type="button" id="btnAplicarFiltros">
+      Aplicar filtros
+    </button>
+
+    <button type="button" id="btnLimpiarFiltros" class="btn-secundario">
+      Limpiar filtros
+    </button>
+  </aside>
+
+  <section class="zona-resultados">
+    <div class="resultados-cabecera">
+      <h2>Productos disponibles</h2>
+      <p id="contadorProductos">Cargando productos...</p>
+    </div>
+
+    <div
+      class="resultados"
+      id="resultados"
+      aria-live="polite"
+    ></div>
+  </section>
+</div>
+```
+
+  </main>
+
+  <script src="/shared.js"></script>
+
+  <script src="/search/search.js"></script>
+
 </body>
 </html>
